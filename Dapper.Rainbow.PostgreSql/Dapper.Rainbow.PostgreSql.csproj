@@ -44,9 +44,6 @@
     <Reference Include="policy.2.0.Npgsql">
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\policy.2.0.Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper">
-      <HintPath>..\packages\Dapper.1.13\lib\net45\Dapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -60,5 +57,11 @@
     <None Include="Dapper.Rainbow.PostgreSql.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\lib\dapper-dot-net\Dapper NET45\Dapper NET45.csproj">
+      <Project>{0FFF5BC7-0A4B-4D87-835E-4FAD70937507}</Project>
+      <Name>Dapper NET45</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

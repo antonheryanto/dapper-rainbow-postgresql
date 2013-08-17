@@ -56,8 +56,8 @@ namespace Dapper
                 var o = (object)data;
                 var paramNames = GetParamNames(o);
 
-                string cols = string.Join(",", paramNames);
-                string cols_params = string.Join(",", paramNames.Select(p => "@" + p));
+                string cols = string.Join(",", paramNames.Values);
+                string cols_params = string.Join(",", paramNames.Select(p => "@" + p.Key));
 				var sql = "INSERT INTO " + TableName + " (" + cols + ") VALUES (" + cols_params + ") RETURNING id";
 
 				return database.Query<TId>(sql, o).FirstOrDefault();
@@ -81,8 +81,8 @@ namespace Dapper
 
                 var b = new StringBuilder();
                 b.Append("UPDATE ").Append(TableName).Append(" SET ");
-                b.AppendLine(string.Join(",", paramNames.Select(p => p + " = @" + p)));
-				b.Append(" WHERE ").Append(string.Join(" AND ", keys.Select(p => p + " = @" + p)));
+                b.AppendLine(string.Join(",", paramNames.Select(p => p.Value + " = @" + p.Key)));
+				b.Append(" WHERE ").Append(string.Join(" AND ", keys.Select(p => p.Value + " = @" + p.Key)));
 
                 var parameters = new DynamicParameters(data);
                 parameters.AddDynamicParams(where);
@@ -113,9 +113,9 @@ namespace Dapper
                 var paramNames = GetParamNames((object)data);
                 var k = GetParamNames((object)key).Single();
                 
-                string cols = string.Join(",", paramNames);
-                string cols_params = string.Join(",", paramNames.Select(p => "@" + p));
-                string cols_update = string.Join(",", paramNames.Select(p => p + " = @" + p)); 
+                string cols = string.Join(",", paramNames.Values);
+                string cols_params = string.Join(",", paramNames.Select(p => "@" + p.Key));
+                string cols_update = string.Join(",", paramNames.Select(p => p.Value + " = @" + p.Key)); 
 				var parameters = new DynamicParameters(data);
 				parameters.AddDynamicParams(key);
 				var b = new StringBuilder();
@@ -153,7 +153,7 @@ namespace Dapper
                 if (where == null) return database.Execute("TRUNCATE " + TableName) > 0;
 				var o = (object)where;
                 var paramNames = GetParamNames(o);
-                var w = string.Join(" AND ", paramNames.Select(p => p + " = @" + p));
+                var w = string.Join(" AND ", paramNames.Select(p => p.Key + " = @" + p.Value));
                 return database.Execute("DELETE FROM " + TableName + " WHERE " + w, o) > 0;
             }
 
@@ -171,7 +171,7 @@ namespace Dapper
             {
 				var o = (object)where;
 				var paramNames = GetParamNames(o);
-				var w = string.Join(" AND ", paramNames.Select(p => p + " = @" + p));
+				var w = string.Join(" AND ", paramNames.Select(p => p.Value + " = @" + p.Key));
 				return database.Query<T>("SELECT * FROM " + TableName + " WHERE " + w, o).FirstOrDefault();
             }
 
@@ -180,7 +180,7 @@ namespace Dapper
                 if (where == null) return database.Query<T>("SELECT * FROM " + TableName + " LIMIT 1").FirstOrDefault();
 				var o = (object)where;
                 var paramNames = GetParamNames(o);
-                var w = string.Join(" AND ", paramNames.Select(p => p + " = @" + p));
+                var w = string.Join(" AND ", paramNames.Select(p => p.Value + " = @" + p.Key));
                 return database.Query<T>("SELECT * FROM "+ TableName + " WHERE " + w + " LIMIT 1", o).FirstOrDefault();
             }
 
@@ -189,22 +189,31 @@ namespace Dapper
 				return database.Query<T>("SELECT * FROM " + TableName).ToList();
 			}
 
-            static ConcurrentDictionary<Type, List<string>> paramNameCache = new ConcurrentDictionary<Type, List<string>>();
+			public List<T> All(dynamic where = null)
+			{
+				if (where == null) return database.Query<T>("SELECT * FROM " + TableName).ToList();
+				var o = (object)where;
+				var paramNames = GetParamNames(o);
+				var w = string.Join(" AND ", paramNames.Select(p => p.Value + " = @" + p.Key));
+				return database.Query<T>("SELECT * FROM " + TableName + " WHERE " + w, o).ToList();
+			}
 
-            internal static List<string> GetParamNames(object o)
+			static ConcurrentDictionary<Type, Dictionary<string, string>> paramNameCache = new ConcurrentDictionary<Type, Dictionary<string, string>>();
+
+            internal static Dictionary<string, string> GetParamNames(object o)
             {
                 if (o is DynamicParameters)
                 {
-					return (o as DynamicParameters).ParameterNames.ToList();
+					return (o as DynamicParameters).ParameterNames.ToDictionary(k => k, v => v.ToUnderScore());
                 }
 
-                List<string> paramNames;
+				Dictionary<string, string> paramNames;
                 if (!paramNameCache.TryGetValue(o.GetType(), out paramNames))
                 {
-                    paramNames = new List<string>();
+					paramNames = new Dictionary<string, string>();
                     foreach (var prop in o.GetType().GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public))
                     {
-						paramNames.Add(prop.Name);
+						paramNames.Add(prop.Name, prop.Name.ToUnderScore());
                     }
                     paramNameCache[o.GetType()] = paramNames;
                 }

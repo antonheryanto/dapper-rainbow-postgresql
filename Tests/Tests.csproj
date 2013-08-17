@@ -43,9 +43,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Dapper">
-      <HintPath>..\packages\Dapper.1.13\lib\net45\Dapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -59,6 +56,10 @@
     <ProjectReference Include="..\Dapper.Rainbow.PostgreSql\Dapper.Rainbow.PostgreSql.csproj">
       <Project>{3CFADBBC-8235-43B2-917C-94FA2873BEB6}</Project>
       <Name>Dapper.Rainbow.PostgreSql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\lib\dapper-dot-net\Dapper NET45\Dapper NET45.csproj">
+      <Project>{0FFF5BC7-0A4B-4D87-835E-4FAD70937507}</Project>
+      <Name>Dapper NET45</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
