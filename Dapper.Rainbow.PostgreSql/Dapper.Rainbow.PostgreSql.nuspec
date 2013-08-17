@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Dapper.Rainbow.PostgreSql</id>
+    <version>0.6.2</version>
+    <title>Dapper.Rainbow.PostgreSql</title>
+    <authors>Sam Saffron, Anton Heryanto</authors>
+    <owners>Sam Saffron, Anton Heryanto</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://code.google.com/p/dapper-dot-net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      Trivial micro-orm implemented on Dapper, provides with CRUD helpers.
+    </description>
+    <summary>
+      A demo is available at https://gist.github.com/1599013 .
+      The implementation was extracted from http://data.stackexchange.com source at: http://code.google.com/p/stack-exchange-data-explorer/ .
+      Data explorer uses "Rainbow" exclusively for all database access.
+    </summary>
+    <releaseNotes>
+    	* implement postgresql query and add schema
+    </releaseNotes>
+    <copyright>Copyright Sam Saffron, Anton Heryanto 2013</copyright>
+    <tags>orm dapper micro-orm mysql</tags>
+    <dependencies>
+      <dependency id="Dapper" version="1.13" />
+      <dependency id="Npgsql" version="2.0.12.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Dapper.Rainbow.PostgreSql.dll" target="lib/net45" />
+    <file src="Dapper.Rainbow.PostgreSql.xml" target="lib/net45" />
+  </files>
+</package>

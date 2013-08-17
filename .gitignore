@@ -1,0 +1,6 @@
+*.userprefs
+*.config
+packages
+obj
+bin
+test-results
