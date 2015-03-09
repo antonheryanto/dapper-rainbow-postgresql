@@ -18,6 +18,7 @@
       Data explorer uses "Rainbow" exclusively for all database access.
     </summary>
     <releaseNotes>
+    	* add insert method without key
     	* uses patched dapper to support underscore column mapping
     	* convert to underscore table and column from pascal case poco naming schema
     	* implement postgresql query and add schema

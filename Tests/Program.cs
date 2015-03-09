@@ -25,7 +25,7 @@ namespace Tests
 
 		public static void Main (string[] args)
 		{
-			var x = Db.Users.All ();
+			var x = Db.Users.Update(1, new { fullName = "Anton test" });
 			Console.WriteLine (x);
 		}
 

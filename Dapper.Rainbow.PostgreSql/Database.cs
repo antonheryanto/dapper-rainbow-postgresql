@@ -55,12 +55,28 @@ namespace Dapper
             {
                 var o = (object)data;
                 var paramNames = GetParamNames(o);
+				paramNames.Remove ("Id");
 
                 string cols = string.Join(",", paramNames.Values);
                 string cols_params = string.Join(",", paramNames.Select(p => "@" + p.Key));
 				var sql = "INSERT INTO " + TableName + " (" + cols + ") VALUES (" + cols_params + ") RETURNING id";
 
 				return database.Query<TId>(sql, o).FirstOrDefault();
+			}
+
+			/// <summary>
+			/// Inserts the without key.
+			/// </summary>
+			/// <returns>The without key.</returns>
+			/// <param name="data">Data.</param>
+			public int InsertWithoutKey(dynamic data)
+			{
+				var o = (object)data;
+				var paramNames = GetParamNames(o);
+				string cols = string.Join(",", paramNames.Values);
+				string cols_params = string.Join(",", paramNames.Select(p => "@" + p.Key));
+				var sql = "INSERT INTO " + TableName + " (" + cols + ") VALUES (" + cols_params + ")";
+				return database.Execute(sql, o);
 			}
 
             /// <summary>
@@ -153,7 +169,7 @@ namespace Dapper
                 if (where == null) return database.Execute("TRUNCATE " + TableName) > 0;
 				var o = (object)where;
                 var paramNames = GetParamNames(o);
-                var w = string.Join(" AND ", paramNames.Select(p => p.Key + " = @" + p.Value));
+                var w = string.Join(" AND ", paramNames.Select(p => p.Value + " = @" + p.Key));
                 return database.Execute("DELETE FROM " + TableName + " WHERE " + w, o) > 0;
             }
 
@@ -167,6 +183,10 @@ namespace Dapper
                 return database.Query<T>("SELECT * FROM " + TableName + " WHERE id = @id", new { id }).FirstOrDefault();
             }
 
+			/// <summary>
+			/// Get the specified where.
+			/// </summary>
+			/// <param name="where">Where.</param>
             public T Get(dynamic where)
             {
 				var o = (object)where;
@@ -175,6 +195,10 @@ namespace Dapper
 				return database.Query<T>("SELECT * FROM " + TableName + " WHERE " + w, o).FirstOrDefault();
             }
 
+			/// <summary>
+			/// First the specified where.
+			/// </summary>
+			/// <param name="where">Where.</param>
             public T First(dynamic where = null)
             {
                 if (where == null) return database.Query<T>("SELECT * FROM " + TableName + " LIMIT 1").FirstOrDefault();
@@ -184,11 +208,18 @@ namespace Dapper
                 return database.Query<T>("SELECT * FROM "+ TableName + " WHERE " + w + " LIMIT 1", o).FirstOrDefault();
             }
 
+			/// <summary>
+			/// All this instance.
+			/// </summary>
 			public List<T> All()
 			{
 				return database.Query<T>("SELECT * FROM " + TableName).ToList();
 			}
 
+			/// <summary>
+			/// All the specified where.
+			/// </summary>
+			/// <param name="where">Where.</param>
 			public List<T> All(dynamic where = null)
 			{
 				if (where == null) return database.Query<T>("SELECT * FROM " + TableName).ToList();
@@ -220,7 +251,7 @@ namespace Dapper
                 return paramNames;
             }
         }
-
+		
 		public class Table<T> : Table<T, int> {
 			public Table(Database<TDatabase> database, string likelyTableName)
 				: base (database, likelyTableName)
