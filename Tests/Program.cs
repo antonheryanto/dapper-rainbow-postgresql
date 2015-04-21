@@ -8,7 +8,7 @@ namespace Tests
 	{
 		public static Db Db {
 			get {
-				var cn = new NpgsqlConnection ("Server=127.0.0.1;Port=5432;Database=ukm_hazita;User Id=anton;MaxPoolSize=100;");
+				var cn = new NpgsqlConnection ("Server=127.0.0.1;Port=5432;Database=postgres;User Id=anton;MaxPoolSize=100;");
 				cn.Open ();
 				return Db.Init (cn, 30);
 			}
@@ -25,7 +25,8 @@ namespace Tests
 
 		public static void Main (string[] args)
 		{
-			var x = Db.Users.Update(1, new { fullName = "Anton test" });
+            var x = Db.Users.Insert (new { Name = "Anton" });
+            Db.Users.Update(x, new { Name = "Anton test" });
 			Console.WriteLine (x);
 		}
 

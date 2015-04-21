@@ -2,12 +2,12 @@
 <package >
   <metadata>
     <id>Dapper.Rainbow.PostgreSql</id>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <title>Dapper.Rainbow.PostgreSql</title>
     <authors>Sam Saffron, Anton Heryanto</authors>
     <owners>Sam Saffron, Anton Heryanto</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>http://code.google.com/p/dapper-dot-net/</projectUrl>
+    <projectUrl>https://github.com/antonheryanto/dapper-rainbow-postgresql</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Trivial micro-orm implemented on Dapper, provides with CRUD helpers.
@@ -18,20 +18,18 @@
       Data explorer uses "Rainbow" exclusively for all database access.
     </summary>
     <releaseNotes>
-    	* add insert method without key
-    	* uses patched dapper to support underscore column mapping
-    	* convert to underscore table and column from pascal case poco naming schema
-    	* implement postgresql query and add schema
+    * 0.7.1 - upgrade to dapper 1.40
+    * 0.7.0 - add insert method without key, uses underscore table name
     </releaseNotes>
-    <copyright>Copyright Sam Saffron, Anton Heryanto 2013</copyright>
+    <copyright>Copyright Sam Saffron, Anton Heryanto 2015</copyright>
     <tags>orm dapper micro-orm mysql</tags>
     <dependencies>
-      <dependency id="Npgsql" version="2.0.12.1" />
+      <dependency id="Dapper" version="1.40" />
+      <dependency id="Npgsql" version="2.2.5" />
     </dependencies>
   </metadata>
   <files>
-  	<file src="Dapper.dll" target="lib/net45" />
-    <file src="Dapper.Rainbow.PostgreSql.dll" target="lib/net45" />
-    <file src="Dapper.Rainbow.PostgreSql.xml" target="lib/net45" />
+    <file src="bin/Dapper.Rainbow.PostgreSql.dll" target="lib/net45" />
+    <file src="bin/Dapper.Rainbow.PostgreSql.xml" target="lib/net45" />
   </files>
 </package>
